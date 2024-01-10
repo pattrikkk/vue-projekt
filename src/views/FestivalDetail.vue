@@ -1,29 +1,48 @@
 <template>
-  <div v-if="festival">
-    <h2>{{ festival.name }}</h2>
-    <p><strong>Date:</strong> {{ festival.date }}</p>
-    <p><strong>Location:</strong> {{ festival.location }}</p>
-  </div>
-  <div v-else>
-    <p>Načítavam...</p>
+  <div v-if="festival" class="container mt-4">
+    <h2 class="mb-3">{{ festival.name }}</h2>
+    <p class="mb-2"><strong>Date:</strong> {{ festival.date_from }} - {{ festival.date_to }}</p>
+    <p class="mb-2"><strong>Location:</strong> {{ festival.country }}, {{ festival.city }}, {{ festival.street }} {{ festival.st_number }}</p>
+    <p class="mb-2"><strong>Price:</strong> {{ festival.price }}€</p>
+    <p class="mb-2"><strong>Description:</strong> {{ festival.description }}</p>
+    
+    <div v-if="stages.length > 0" class="mb-2">
+      <strong>Stages:</strong>
+      <ul>
+        <li v-for="stage in stages" :key="stage.id">
+          {{ stage.name }}
+        </li>
+      </ul>
+    </div>
+    <div v-else class="mb-2">
+      <strong>No stages available for this festival.</strong>
+    </div>
   </div>
 </template>
+
+
   
 <script>
 import { useFestivalStore } from '@/stores/festival';
+import { useStageStore } from '@/stores/stage';
 export default {
   name: 'FestivalDetail',
   data() {
     return {
-      store: useFestivalStore(),
+      festivalStore: useFestivalStore(),
+      stageStore: useStageStore(),
     };
   },
   mounted() {
-    this.store.fetchFestivals()
+    this.festivalStore.fetchFestivals()
+    this.stageStore.fetchStages()
   },
   computed: {
     festival() {
-      return this.store.getFestivalById(this.$route.params.id);
+      return this.festivalStore.getFestivalById(this.$route.params.id);
+    },
+    stages() {
+      return this.stageStore.getStagesFromFestivalID(this.$route.params.id);
     },
   },
 };

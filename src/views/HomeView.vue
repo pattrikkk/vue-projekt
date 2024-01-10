@@ -1,49 +1,52 @@
 <template>
-  <div>
-    <div class="container mt-4">
-      <div class="jumbotron">
-        <h2 class="display-4">Vitajte na stránke Festival Info!</h2>
-        <p class="lead">Získajte najnovšie informácie o rôznych festivaloch z celého sveta.</p>
-      </div>
-      <section>
-        <h2 class="mb-4">Nadchádzajúce Festivaly</h2>
-        <div v-for="festival in upcomingFestivals" :key="festival.id" class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">{{ festival.name }}</h5>
-            <p class="card-text">{{ festival.date }}</p>
-            <p class="card-text">{{ festival.location }}</p>
-            <router-link :to="'/festivals/' + festival.id" class="btn btn-primary">Čítaj viac</router-link>
-          </div>
-        </div>
-      </section>
+  <div class="container mt-4">
+    <div class="jumbotron">
+      <h2 class="display-4">Discover the Magic of Festivals</h2>
+      <p class="lead">Immerse yourself in a world of vibrant cultures, live music, and unforgettable experiences.</p>
     </div>
-
-    <footer class="bg-dark text-white text-center p-3">
-      <p>&copy; 2024 Festival Info. Všetky práva vyhradené.</p>
-    </footer>
+    <section>
+      <h2 class="mb-4">Happening right now</h2>
+      <div class="row">
+        <Card v-for="festival in happeningNowFestivals" :key="festival.id" :festival="festival" />
+      </div>
+    </section>
+    <section>
+      <h2 class="mb-4">Upcoming festivals</h2>
+      <div class="row">
+        <Card v-for="festival in upcomingFestivals" :key="festival.id" :festival="festival" />
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
 import { useFestivalStore } from '@/stores/festival';
+import Card from '@/components/FestivalCard.vue';
 
 export default {
   name: 'HomePage',
+  components: {
+    Card,
+  },
   data() {
     return {
       store: useFestivalStore(),
     };
   },
   mounted() {
-    this.store.fetchFestivals()
+    this.store.fetchFestivals();
   },
   computed: {
+    happeningNowFestivals() {
+      const now = new Date();
+      return this.store.getFestivals().filter(festival => new Date(festival.date_from) <= now && new Date(festival.date_to) >= now);
+    },
     upcomingFestivals() {
-      return this.store.getFestivals()
+      const now = new Date();
+      return this.store.getFestivals().filter(festival => new Date(festival.date_from) > now);
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
