@@ -32,6 +32,7 @@ const isRouteActive = (route) => {
 </script>
 
 <style scoped>
-.nav-item.active {
+.navbar {
+  border-radius: 0 0 10px 10px;
 }
 </style>

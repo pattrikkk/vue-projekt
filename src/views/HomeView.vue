@@ -1,9 +1,6 @@
 <template>
   <div class="container mt-4">
-    <div class="jumbotron">
-      <h2 class="display-4">Discover the Magic of Festivals</h2>
-      <p class="lead">Immerse yourself in a world of vibrant cultures, live music, and unforgettable experiences.</p>
-    </div>
+    <Carousel :carouselId="`carousel`" :slides="carouselSlides" />
     <section>
       <h2 class="mb-4">Happening right now</h2>
       <div class="row">
@@ -22,15 +19,20 @@
 <script>
 import { useFestivalStore } from '@/stores/festival';
 import Card from '@/components/FestivalCard.vue';
+import Carousel from '@/components/Carousel.vue';
 
 export default {
   name: 'HomePage',
   components: {
     Card,
+    Carousel,
   },
   data() {
     return {
       store: useFestivalStore(),
+      carouselSlides: [
+        { imageSrc: 'https://placehold.co/1000x300/png', altText: 'Placeholder 1', title: 'Discover Exciting Festivals', description: 'Explore a world of vibrant cultures and thrilling performances at our diverse festivals.' },
+      ]
     };
   },
   mounted() {
@@ -39,11 +41,11 @@ export default {
   computed: {
     happeningNowFestivals() {
       const now = new Date();
-      return this.store.getFestivals().filter(festival => new Date(festival.date_from) <= now && new Date(festival.date_to) >= now);
+      return this.store.getFestivals().filter(festival => new Date(festival.date_from) <= now && new Date(festival.date_to) >= now).slice(0, 3);
     },
     upcomingFestivals() {
       const now = new Date();
-      return this.store.getFestivals().filter(festival => new Date(festival.date_from) > now);
+      return this.store.getFestivals().filter(festival => new Date(festival.date_from) > now).slice(0, 3);
     },
   },
 };
