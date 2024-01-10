@@ -1,7 +1,7 @@
 <template>
   <div v-if="festival" class="container mt-4">
     <Carousel :carouselId="`festival-${festival.id}-carousel`" :slides="carouselSlides" />
-    <div class="container border my-2">
+    <div class="main">
       <h2 class="my-3">{{ festival.name }}</h2>
       <hr>
       <div class="row">
@@ -50,20 +50,27 @@
           <hr>
         </div>
       </div>
-      <p class="my-3"><strong>Description</strong></p>
+      <h5 class="my-3"><strong>Description</strong></h5>
       <p class="my-3">{{ festival.description }}</p>
+      <hr>
+      <h5 class="my-3"><strong>Performing musicians</strong></h5>
+      <div class="row justify-content-center">
+        <InterpretCard v-for="interpret in festival.interprets" :key="interpret.id" :interpret="interpret" />
+      </div>
     </div>
   </div>
 </template>
   
 <script>
 import { useFestivalStore } from '@/stores/festival';
+import InterpretCard from '@/components/InterpretCard.vue';
 import Carousel from '@/components/Carousel.vue';
 export default {
   name: 'FestivalDetail',
   components: {
     Carousel,
-  },
+    InterpretCard
+},
   data() {
     return {
       festivalStore: useFestivalStore(),
@@ -95,8 +102,10 @@ export default {
 hr {
   margin: 0;
 }
-.container {
+.main {
   border-radius: 10px;
-  border:0;
+  border: 1px solid #e6e6e6;
+  padding: 0 1rem 0.2rem 1rem;
+  margin: 1rem 0 1rem 0;
 }
 </style>
