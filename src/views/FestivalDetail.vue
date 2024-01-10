@@ -1,24 +1,54 @@
 <template>
   <div v-if="festival" class="container mt-4">
     <Carousel :carouselId="`festival-${festival.id}-carousel`" :slides="carouselSlides" />
-    <h2 class="mb-3">{{ festival.name }}</h2>
-    <p class="mb-2"><strong>Date:</strong> {{ festival.date_from }} - {{ festival.date_to }}</p>
-    <p class="mb-2"><strong>Location:</strong> {{ festival.country }}, {{ festival.city }}, {{ festival.street }} {{ festival.st_number }}</p>
-    <p class="mb-2"><strong>Price:</strong> {{ festival.price }}€</p>
-    <p class="mb-2"><strong>Description:</strong> {{ festival.description }}</p>
-    
-    <div v-if="stages.length > 0" class="mb-2">
-      <strong>Stages:</strong>
-      <ul>
-        <li v-for="stage in stages" :key="stage.id">
-          {{ stage.name }}
-        </li>
-      </ul>
+    <div class="container border my-2 rounded">
+      <h2 class="my-3">{{ festival.name }}</h2>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <p class="col-3 my-3"><strong>From</strong></p>
+            <p class="col-9 my-3">{{ formatDate(festival.date_from) }}</p>
+          </div>
+          <hr>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <p class="col-3 my-3"><strong>To</strong></p>
+            <p class="col-9 my-3">{{ formatDate(festival.date_to) }}</p>
+          </div>
+          <hr>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <p class="col-3 my-3"><strong>Price</strong></p>
+            <p class="col-9 my-3">{{ festival.price }}€</p>
+          </div>
+          <hr>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <p class="col-3 my-3"><strong>Location</strong> </p>
+            <p class="col-9 my-3">{{ festival.country }}, {{ festival.city }}, {{ festival.street }} {{
+              festival.st_number }}</p>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <p class="my-3"><strong>Description</strong></p>
+      <p class="my-3">{{ festival.description }}</p>
+      <hr>
+      <div v-if="stages.length > 0" class="my-3">
+        <strong>Stages</strong>
+        <ul>
+          <li v-for="stage in stages" :key="stage.id">
+            {{ stage.name }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
-
-
   
 <script>
 import { useFestivalStore } from '@/stores/festival';
@@ -34,11 +64,17 @@ export default {
       festivalStore: useFestivalStore(),
       stageStore: useStageStore(),
       carouselSlides: [
-        { imageSrc: 'https://placehold.co/1000x400/png', altText:'Placeholder 1'},
-        { imageSrc: 'https://placehold.co/1000x400/png', altText:'Placeholder 2'},
-        { imageSrc: 'https://placehold.co/1000x400/png', altText:'Placeholder 3'},
+        { imageSrc: 'https://placehold.co/1000x400/png', altText: 'Placeholder 1' },
+        { imageSrc: 'https://placehold.co/1000x400/png', altText: 'Placeholder 2' },
+        { imageSrc: 'https://placehold.co/1000x400/png', altText: 'Placeholder 3' },
       ]
     };
+  },
+  methods: {
+    formatDate(date) {
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return new Date(date).toLocaleDateString('en-GB', options);
+    },
   },
   mounted() {
     this.festivalStore.fetchFestivals()
@@ -54,3 +90,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+hr {
+  margin: 0;
+}
+</style>
