@@ -13,11 +13,11 @@
           <li class="nav-item" :class="{ active: isRouteActive('/festivals') }">
             <RouterLink class="nav-link" to="/festivals">Festivals</RouterLink>
           </li>
-          <li class="nav-item" :class="{ active: isRouteActive('/interprets') }">
-            <RouterLink class="nav-link" to="/interprets">Interprets</RouterLink>
+          <li class="nav-item" :class="{ active: isRouteActive('/musicians') }">
+            <RouterLink class="nav-link" to="/musicians">Musicians</RouterLink>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+          <li class="nav-item" :class="{ active: isRouteActive('/contact') }">
+            <RouterLink class="nav-link" to="/contact">Contact</RouterLink>
           </li>
         </ul>
       </div>

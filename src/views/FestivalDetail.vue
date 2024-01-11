@@ -1,5 +1,6 @@
 <template>
-  <div v-if="festival" class="container mt-4">
+  <div v-if="isLoading">Loading...</div>
+  <div v-else-if="festival" class="container mt-4">
     <Carousel :carouselId="`festival-${festival.id}-carousel`" :slides="carouselSlides" />
     <div class="main">
       <h2 class="my-3">{{ festival.name }}</h2>
@@ -55,24 +56,28 @@
       <hr>
       <h5 class="my-3"><strong>Performing musicians</strong></h5>
       <div class="row justify-content-center">
-        <InterpretCard v-for="interpret in festival.interprets" :key="interpret.id" :interpret="interpret" />
+        <MusicianCard v-for="musician in festival.musicians" :key="musician.id" :musician="musician" />
       </div>
     </div>
   </div>
+  <Alert v-else type="danger" message="Festival with this id not found." />
 </template>
   
 <script>
 import { useFestivalStore } from '@/stores/festival';
-import InterpretCard from '@/components/InterpretCard.vue';
+import MusicianCard from '@/components/MusicianCard.vue';
 import Carousel from '@/components/Carousel.vue';
+import Alert from '@/components/Alert.vue';
 export default {
   name: 'FestivalDetail',
   components: {
     Carousel,
-    InterpretCard
-},
+    MusicianCard,
+    Alert,
+  },
   data() {
     return {
+      isLoading: true,
       festivalStore: useFestivalStore(),
       carouselSlides: [
         { imageSrc: 'https://placehold.co/1000x400/png', altText: 'Placeholder 1' },
@@ -88,7 +93,9 @@ export default {
     },
   },
   mounted() {
-    this.festivalStore.fetchFestivals()
+    this.festivalStore.fetchFestivals().then(() => {
+      this.isLoading = false;
+    });
   },
   computed: {
     festival() {
@@ -102,6 +109,7 @@ export default {
 hr {
   margin: 0;
 }
+
 .main {
   border-radius: 10px;
   border: 1px solid #e6e6e6;
